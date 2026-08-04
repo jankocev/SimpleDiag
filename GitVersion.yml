@@ -1,5 +1,10 @@
 mode: ContinuousDelivery
 
+on:
+  push:
+    tags:
+      - "v*"
+
 branches:
   main:
     regex: ^main$
