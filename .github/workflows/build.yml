@@ -49,8 +49,8 @@ jobs:
         env:
           VERSION: ${{ steps.gitversion.outputs.semVer }}
         run: |
-          chmod +x ./ServerDiagnostics/build-deb.sh
-          ./ServerDiagnostics/build-deb.sh
+          chmod +x ./ServerDiagnostics/build.sh
+          ./ServerDiagnostics/build.sh
 
       - name: Verify package
         run: |
