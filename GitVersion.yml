@@ -1,0 +1,17 @@
+mode: ContinuousDelivery
+
+on:
+  push:
+    tags:
+      - "v*"
+
+branches:
+  main:
+    regex: ^main$
+    increment: Patch
+
+  feature:
+    regex: ^feature[/-]
+    increment: Minor
+
+next-version: 1.0.0
