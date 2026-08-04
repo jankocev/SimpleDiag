@@ -1,0 +1,12 @@
+mode: ContinuousDelivery
+
+branches:
+  main:
+    regex: ^main$
+    increment: Patch
+
+  feature:
+    regex: ^feature[/-]
+    increment: Minor
+
+next-version: 1.0.0

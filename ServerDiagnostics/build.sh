@@ -2,7 +2,7 @@
 set -e
 
 APP_NAME="ServerDiagnostics"
-VERSION="1.0.0"
+VERSION=${VERSION:-0.0.0}
 ARCH="amd64"
 RUNTIME="linux-x64"
 
