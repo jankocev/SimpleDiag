@@ -10,7 +10,9 @@ rm -rf publish package *.deb
 
 # Publish
 dotnet publish -c Release -r "$RUNTIME" \
-  --self-contained true -o publish
+  --self-contained true \
+  -p:PublishSingleFile=true \
+  -o publish
 
 #Create template config
 mkdir -p package/etc/$APP_NAME

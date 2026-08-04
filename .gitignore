@@ -1,6 +1,7 @@
-*/build
-*/package
-*/bin
-*/obj
-*/publish
+**/build
+**/package
+**/bin
+**/obj
+**/publish
+**.deb
 
