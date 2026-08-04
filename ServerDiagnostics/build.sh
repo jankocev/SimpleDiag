@@ -45,7 +45,7 @@ cp -r publish/* package/usr/local/$APP_NAME/
 # Launcher
 cat >package/usr/bin/$APP_NAME <<EOF
 #!/bin/sh
-exec /usr/bin/dotnet /usr/local/$APP_NAME/${APP_NAME}.dll "\$@"
+exec /usr/bin/dotnet /usr/local/$APP_NAME/${APP_NAME} "\$@"
 EOF
 
 chmod +x package/usr/bin/$APP_NAME
