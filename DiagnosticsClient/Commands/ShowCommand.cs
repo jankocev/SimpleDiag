@@ -7,28 +7,35 @@ namespace DiagnosticsClient.Commands;
 
 public class ShowCommand
 {
-
     public static Command Create(IServiceProvider services)
     {
         var server = new Command("show");
 
-        server.SetAction(async (parseResult) =>
-        {
-            using var scope = services.CreateScope();
-            var dataService = scope.ServiceProvider.GetRequiredService<DataService>();
-            var res = await dataService.LoadServerStatesAsync();
-
-            Console.WriteLine(JsonSerializer.Serialize(res.Select(m => new OutputModel()
+        server.SetAction(
+            async (parseResult) =>
             {
-                Name = m.Server!.Name,
-                Url = m.Server!.Url,
-                Time = m.LastUpdate,
-                Ram = m.Ram,
-                Disk = m.Disk,
-                IsOk = m.IsOk,
-                Error = m.Error
-            }).ToList()));
-        });
+                using var scope = services.CreateScope();
+                var dataService = scope.ServiceProvider.GetRequiredService<DataService>();
+                var res = await dataService.LoadServerStatesAsync();
+
+                Console.WriteLine(
+                    JsonSerializer.Serialize(
+                        res.Select(m => new OutputModel()
+                            {
+                                Name = m.Server!.Name,
+                                Url = m.Server!.Url,
+                                Time = m.LastUpdate,
+                                Ram = m.Ram,
+                                Disk = m.Disk,
+                                IsOk = m.IsOk,
+                                Error = m.Error,
+                                DockerServiceCount = m.DockerServiceCount,
+                            })
+                            .ToList()
+                    )
+                );
+            }
+        );
         return server;
     }
 
@@ -36,13 +43,13 @@ public class ShowCommand
     {
         public string? Name { get; set; }
         public string? Url { get; set; }
-        public string? Error {get; set;}
+        public string? Error { get; set; }
         public DateTime? Time { get; set; }
         public int Ram { get; set; } = 0;
         public int Disk { get; set; } = 0;
-        public bool IsOk {get; set;} = false;
+        public bool IsOk { get; set; } = false;
+        public int DockerServiceCount { get; set; } = 0;
     }
-
 }
 
 public class Helper

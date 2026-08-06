@@ -6,14 +6,12 @@ using Spectre.Console;
 
 namespace DiagnosticsClient.Menu;
 
-public class ServerMenu: IMenu
+public class ServerMenu : IMenu
 {
     private readonly ServerService _serverService;
     private readonly DataService _dataService;
 
-    public ServerMenu(
-        DataService dataService, 
-        ServerService serverService)
+    public ServerMenu(DataService dataService, ServerService serverService)
     {
         _dataService = dataService;
         _serverService = serverService;
@@ -28,14 +26,10 @@ public class ServerMenu: IMenu
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("Server configuration")
-                    .AddChoices(new[]
-                    {
-                        "List servers",
-                        "History",
-                        "Add server",
-                        "Remove server",
-                        "Exit"
-                    }));
+                    .AddChoices(
+                        new[] { "List servers", "History", "Add server", "Remove server", "Exit" }
+                    )
+            );
 
             switch (choice)
             {
@@ -74,7 +68,8 @@ public class ServerMenu: IMenu
             new SelectionPrompt<ServerEntity>()
                 .Title("Select server:")
                 .UseConverter(x => $"{x.Name} ({x.Url})")
-                .AddChoices(servers));
+                .AddChoices(servers)
+        );
         var details = await _dataService.LoadAsync(selected.Id!.Value);
         Console.Write(JsonSerializer.Serialize(details));
     }
@@ -90,7 +85,12 @@ public class ServerMenu: IMenu
 
         foreach (var s in servers)
         {
-            table.AddRow(s.Id.ToString(), s.Name ?? "undefined", s.Url ?? "undefined", s.ApiKey ?? "undefined");
+            table.AddRow(
+                s.Id.ToString(),
+                s.Name ?? "undefined",
+                s.Url ?? "undefined",
+                s.ApiKey ?? "undefined"
+            );
         }
 
         AnsiConsole.Write(table);
@@ -101,23 +101,22 @@ public class ServerMenu: IMenu
         var name = AnsiConsole.Ask<string>("Server [green]name[/]:");
         var desc = AnsiConsole.Ask<string>("Description:");
         var url = AnsiConsole.Ask<string>("Server [green]URL[/]:");
-        var key = AnsiConsole.Prompt(
-            new TextPrompt<string>("API key:")
-                .Secret());
+        var key = AnsiConsole.Prompt(new TextPrompt<string>("API key:").Secret());
 
-
-        await _serverService.CreateServerAsync(new ServerEntity
-        {
-            Name = name,
-            Url = url,
-            ApiKey = key,
-            Description = desc,
-            State = new()
+        await _serverService.CreateServerAsync(
+            new ServerEntity
             {
-                IsOk = false,
-                Error = "Server is freshly created, no data are recoreded yet"
+                Name = name,
+                Url = url,
+                ApiKey = key,
+                Description = desc,
+                State = new()
+                {
+                    IsOk = false,
+                    Error = "Server is freshly created, no data are recoreded yet",
+                },
             }
-        });
+        );
 
         AnsiConsole.MarkupLine($"[green]Server {name} added.[/]");
     }
@@ -135,10 +134,10 @@ public class ServerMenu: IMenu
             new SelectionPrompt<ServerEntity>()
                 .Title("Select server to remove")
                 .UseConverter(x => $"{x.Name} ({x.Url})")
-                .AddChoices(servers));
+                .AddChoices(servers)
+        );
 
         await _serverService.DeleteAsync(selected);
         AnsiConsole.MarkupLine($"[red]Server {selected.Name} removed[/]");
     }
-
 }

@@ -11,7 +11,9 @@ builder.RegisterComponents();
 var host = builder.Build();
 
 using var scope = host.Services.CreateScope();
-var db = scope.ServiceProvider.GetRequiredService<IDbContextFactory<MetricsContext>>().CreateDbContext();
+var db = scope
+    .ServiceProvider.GetRequiredService<IDbContextFactory<MetricsContext>>()
+    .CreateDbContext();
 db.Database.EnsureCreated();
 db.Database.ExecuteSqlRaw("PRAGMA journal_mode=WAL;");
 
@@ -19,12 +21,15 @@ var root = new RootCommand();
 
 var daemon = new Command("daemon");
 
-daemon.SetAction(async (opt) =>
-{
-    await host.RunAsync();
-});
+daemon.SetAction(
+    async (opt) =>
+    {
+        await host.RunAsync();
+    }
+);
 
 root.Add(daemon);
 root.Add(ServerCommand.Create(host.Services));
 root.Add(ShowCommand.Create(host.Services));
+root.Add(LiveCommand.Create(host.Services));
 await root.Parse(args).InvokeAsync();
